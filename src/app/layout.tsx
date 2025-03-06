@@ -2,10 +2,11 @@ import "./globals.css"
 
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
-
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Providers } from "@/app/providers"
+import Navbar from "@/components/navigation/navbar"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -69,7 +70,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background antialiased",
+          "min-h-screen bg-background antialiased flex flex-col",
           inter.className
         )}
       >
@@ -79,7 +80,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Providers>
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
