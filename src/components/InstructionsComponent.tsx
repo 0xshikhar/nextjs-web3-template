@@ -1,4 +1,5 @@
 import styles from "../styles/InstructionsComponent.module.css";
+import { Button } from "@/components/ui/button";
 
 export default function InstructionsComponent() {
 	return (
@@ -12,6 +13,7 @@ export default function InstructionsComponent() {
 					Get started by editing this page in{" "}
 					<span>/pages/index.tsx</span>
 				</p>
+				<Button>Feel Free to give a star on Github</Button>
 			</header>
 		</div>
 	);
