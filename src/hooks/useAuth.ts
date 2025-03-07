@@ -1,12 +1,77 @@
 // hooks/useAuth.ts
-import { useAccount, useSignMessage } from 'wagmi';
-import { useCallback, useState } from 'react';
-import { createAuthMessage, verifySignature } from '@/lib/auth';
+import { useAccount, useSignMessage, useDisconnect } from 'wagmi';
+import { useCallback, useEffect, useState } from 'react';
+import { createAuthMessage } from '@/lib/auth';
 
 export function useAuth() {
     const { address, chain } = useAccount();
     const { signMessageAsync } = useSignMessage();
+    const { disconnect } = useDisconnect();
     const [isLoading, setIsLoading] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const [isAutoSigningIn, setIsAutoSigningIn] = useState(false);
+
+    // Check for existing token on mount and when address changes
+    useEffect(() => {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            validateToken(token);
+        } else if (address) {
+            // Check if this wallet has been seen before
+            checkUserExists(address);
+        }
+    }, [address]);
+
+    // Validate the stored token
+    const validateToken = async (token: string) => {
+        try {
+            const response = await fetch('/api/auth/validate', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user);
+                setIsAuthenticated(true);
+            } else {
+                // Token is invalid, remove it
+                localStorage.removeItem('auth_token');
+                setIsAuthenticated(false);
+                setUser(null);
+
+                // If we have an address, check if user exists
+                if (address) {
+                    checkUserExists(address);
+                }
+            }
+        } catch (error) {
+            console.error('Token validation error:', error);
+            localStorage.removeItem('auth_token');
+            setIsAuthenticated(false);
+            setUser(null);
+        }
+    };
+
+    // Check if user exists and auto-sign in if they do
+    const checkUserExists = async (walletAddress: string) => {
+        try {
+            const response = await fetch(`/api/user/check?address=${walletAddress}`);
+            const data = await response.json();
+
+            if (data.exists) {
+                // User exists, auto-sign in
+                setIsAutoSigningIn(true);
+                await login();
+                setIsAutoSigningIn(false);
+            }
+        } catch (error) {
+            console.error('Error checking user:', error);
+            setIsAutoSigningIn(false);
+        }
+    };
 
     const login = useCallback(async () => {
         if (!address || !chain) return;
@@ -33,6 +98,19 @@ export function useAuth() {
 
             // Store token
             localStorage.setItem('auth_token', token);
+            setIsAuthenticated(true);
+
+            // Fetch user data
+            const userResponse = await fetch('/api/user', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                setUser(userData.user);
+            }
 
             return token;
         } catch (error) {
@@ -43,5 +121,19 @@ export function useAuth() {
         }
     }, [address, chain, signMessageAsync]);
 
-    return { login, isLoading };
+    const logout = useCallback(() => {
+        localStorage.removeItem('auth_token');
+        setIsAuthenticated(false);
+        setUser(null);
+        disconnect();
+    }, [disconnect]);
+
+    return {
+        login,
+        logout,
+        isLoading,
+        isAuthenticated,
+        user,
+        isAutoSigningIn
+    };
 }

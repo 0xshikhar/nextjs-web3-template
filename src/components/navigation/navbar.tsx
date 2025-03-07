@@ -6,8 +6,8 @@ import React, { useState } from "react";
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { cn } from "@/lib/utils";
+import { AuthButton } from "@/components/AuthButton";
 
 const Navbar = () => {
 	const router = useRouter();
@@ -64,13 +64,13 @@ const Navbar = () => {
 						className="text-[#8a939b] text-3xl font-black px-4 hover:text-white cursor-pointer"
 						onClick={() => router.push("/nft")}
 					>
-						<CgProfile />
+						<CgProfile className="mr-2" /> Profile
 					</div>
-					<div className="text-[#8a939b] text-3xl font-black px-4 hover:text-white cursor-pointer">
-						<MdOutlineAccountBalanceWallet />
+					<div className="text-[#c8cacd] hover:text-white cursor-pointer px-4 font-bold flex items-center">
+						<MdOutlineAccountBalanceWallet className="mr-2" /> Wallet
 					</div>
-					<div>
-						<ConnectButton />
+					<div className="px-4">
+						<AuthButton />
 					</div>
 				</div>
 
@@ -85,7 +85,7 @@ const Navbar = () => {
 				</div>
 			</div>
 
-			{/* Mobile Menu - slides down when menu is open */}
+			{/* Mobile Menu - hidden on desktop */}
 			<div
 				className={cn(
 					"md:hidden absolute left-0 right-0 bg-black transition-all duration-300 ease-in-out overflow-hidden",
@@ -141,7 +141,7 @@ const Navbar = () => {
 						<MdOutlineAccountBalanceWallet className="mr-2" /> Wallet
 					</div>
 					<div className="py-2">
-						<ConnectButton />
+						<AuthButton />
 					</div>
 				</div>
 			</div>
