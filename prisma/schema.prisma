@@ -12,3 +12,20 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User {
+  id            String    @id @default(cuid())
+  walletAddress String    @unique
+  createdAt     DateTime  @default(now())
+  lastLoginAt   DateTime? @updatedAt
+
+   // User profile information
+  username     String?   @unique
+  avatar       String?   // IPFS hash or URL
+  bio          String?
+  NFTid      String?
+
+  @@index([walletAddress])
+}
+

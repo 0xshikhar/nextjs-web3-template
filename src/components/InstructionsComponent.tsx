@@ -1,5 +1,6 @@
 import styles from "../styles/InstructionsComponent.module.css";
 import { Button } from "@/components/ui/button";
+import { AuthButton } from "./AuthButton";
 
 export default function InstructionsComponent() {
 	return (
@@ -14,6 +15,7 @@ export default function InstructionsComponent() {
 					<span>/pages/index.tsx</span>
 				</p>
 				<Button>Feel Free to give a star on Github</Button>
+				<AuthButton />
 			</header>
 		</div>
 	);
