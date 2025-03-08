@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && bun build:prisma",
+    "build": "bun build:prisma && next build",
     "build:prisma": "prisma generate --no-engine",
     "start": "next start",
     "lint": "next lint",
