@@ -61,13 +61,15 @@ const Navbar = () => {
 						Explore
 					</div>
 					<div
-						className="text-[#8a939b] text-3xl font-black px-4 hover:text-white cursor-pointer"
+						className="font-bold flex items-center text-[#8a939b] text-xl px-4 hover:text-white cursor-pointer"
 						onClick={() => router.push("/nft")}
 					>
-						<CgProfile className="mr-2" /> Profile
+						<CgProfile className="mr-2" /> NFTProfile
 					</div>
-					<div className="text-[#c8cacd] hover:text-white cursor-pointer px-4 font-bold flex items-center">
-						<MdOutlineAccountBalanceWallet className="mr-2" /> Wallet
+					<div className="text-[#c8cacd] hover:text-white text-xl cursor-pointer px-4 font-bold flex items-center"
+						onClick={() => router.push("/token")}
+					>
+						<MdOutlineAccountBalanceWallet className="mr-2" /> Token
 					</div>
 					<div className="px-4">
 						<AuthButton />

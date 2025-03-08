@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { contractAddresses, contractABIs, blockExplorer } from "@/lib/contracts";
 import { useAuth } from "@/hooks/useAuth";
+import { readContract } from "viem/actions";
 
 export default function NFTProfilePage() {
     // Form state
@@ -72,21 +73,14 @@ export default function NFTProfilePage() {
             hash,
         });
 
-
-    // Fetch profile data
-
-
-
-    const { data: profileData } = useReadContract({
+    const { data: existingProfile } = useReadContract({
         address: contractAddresses.nft as `0x${string}`,
         abi: contractABIs.nft,
         functionName: "getProfile",
         args: [BigInt(tokenId)],
-        query: {
-            enabled: !!tokenId
-        }
     });
 
+    // Fetch profile data
     const fetchProfile = async () => {
         if (!tokenId) return;
 
@@ -94,16 +88,12 @@ export default function NFTProfilePage() {
             setIsLoading(true);
             setError(null);
 
-            const { data: result } = useReadContract({
-                address: contractAddresses.nft as `0x${string}`,
-                abi: contractABIs.nft,
-                functionName: "getProfile",
-                args: [BigInt(tokenId)],
-            });
+            setProfileData(existingProfile);
 
-            setProfileData(result);
-
-            console.log("result", result);
+            // Pre-fill form fields with existing data
+            if (existingProfile) {
+                console.log("existingProfile", existingProfile);
+            }
         } catch (err) {
             console.error("Error fetching profile:", err);
             setError("Profile not found or error fetching data");
@@ -113,40 +103,9 @@ export default function NFTProfilePage() {
         }
     };
 
-    // const fetchProfile = async () => {
-    //     if (!tokenId) return;
-
-    //     try {
-    //         setIsLoading(true);
-    //         setError(null);
-
-    //         const { data: result } = useReadContract({
-    //             address: contractAddresses.nft as `0x${string}`,
-    //             abi: contractABIs.nft,
-    //             functionName: "getProfile",
-    //             args: [BigInt(tokenId)],
-    //         });
-
-    //         setProfileData(result);
-
-    //         // Pre-fill form fields with existing data
-    //         if (result) {
-    //             setName(result.name || "");
-    //             setBio(result.bio || "");
-    //             setSocialLink(result.socialLink || "");
-    //         }
-    //     } catch (err) {
-    //         console.error("Error fetching profile:", err);
-    //         setError("Profile not found or error fetching data");
-    //         setProfileData(null);
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
-
     // Handle create profile
     const handleCreateProfile = async () => {
+        console.log("handleCreateProfile");
         try {
             setError(null);
 
@@ -155,10 +114,10 @@ export default function NFTProfilePage() {
                 return;
             }
 
-            if (!isAuthenticated) {
-                setError("Please sign in with your wallet first");
-                return;
-            }
+            // if (!isAuthenticated) {
+            //     setError("Please sign in with your wallet first");
+            //     return;
+            // }
 
             if (!name) {
                 setError("Name is required");
@@ -195,10 +154,10 @@ export default function NFTProfilePage() {
                 return;
             }
 
-            if (!isAuthenticated) {
-                setError("Please sign in with your wallet first");
-                return;
-            }
+            // if (!isAuthenticated) {
+            //     setError("Please sign in with your wallet first");
+            //     return;
+            // }
 
             if (!tokenId) {
                 setError("Token ID is required");
@@ -393,7 +352,7 @@ export default function NFTProfilePage() {
                                 className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                                 size="lg"
                                 onClick={handleCreateProfile}
-                                disabled={!isConnected || !isAuthenticated || isPending || isConfirming}
+                                disabled={!isConnected || isPending || isConfirming}
                             >
                                 {isPending || isConfirming ? (
                                     <>
@@ -445,7 +404,7 @@ export default function NFTProfilePage() {
 
                                 {profileData && (
                                     <>
-                                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-black">
                                             <h4 className="font-medium mb-2">Current Profile Data</h4>
                                             <div className="grid grid-cols-2 gap-2 text-sm">
                                                 <div className="text-slate-500">Name:</div>
@@ -506,7 +465,7 @@ export default function NFTProfilePage() {
                                             <Button
                                                 className="flex-1 bg-indigo-600 hover:bg-indigo-700"
                                                 onClick={handleUpdateProfile}
-                                                disabled={!isConnected || !isAuthenticated || isPending || isConfirming}
+                                                disabled={!isConnected || isPending || isConfirming}
                                             >
                                                 {isPending || isConfirming ? (
                                                     <RefreshCwIcon className="h-4 w-4 animate-spin" />
@@ -542,7 +501,7 @@ export default function NFTProfilePage() {
                                             className="w-full"
                                             variant="outline"
                                             onClick={handleUpdateImage}
-                                            disabled={!isConnected || !isAuthenticated || isPending || isConfirming || !imageUrl}
+                                            disabled={!isConnected || isPending || isConfirming || !imageUrl}
                                         >
                                             {isPending || isConfirming ? (
                                                 <RefreshCwIcon className="h-4 w-4 animate-spin" />

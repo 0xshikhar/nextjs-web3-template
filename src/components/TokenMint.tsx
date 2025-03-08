@@ -5,21 +5,20 @@ import { useAccount, useReadContract, useWriteContract, useWaitForTransactionRec
 import { parseEther, formatEther } from "viem";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InfoIcon, CoinsIcon, RefreshCwIcon, CheckCircleIcon, AlertCircleIcon } from "lucide-react";
+import { RefreshCwIcon, CheckCircleIcon, AlertCircleIcon } from "lucide-react";
 import { contractAddresses, contractABIs, blockExplorer } from "@/lib/contracts";
 import { useAuth } from "@/hooks/useAuth";
 
-export default function TokenMintPage() {
+function TokenMint() {
     const [amount, setAmount] = useState<number>(1);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [tokenPrice, setTokenPrice] = useState<number>(0);
 
     const { address, isConnected } = useAccount();
     const { isAuthenticated } = useAuth();
@@ -61,18 +60,11 @@ export default function TokenMintPage() {
         functionName: "name",
     });
 
-    const { data: tokenBalance } = useReadContract({
-        address: contractAddresses.tokenMint as `0x${string}`,
-        abi: contractABIs.tokenMint,
-        functionName: "balanceOf",
-        args: [address || "0x0000000000000000000000000000000000000000"],
-        query: {
-            enabled: !!address
-        }
-    });
 
     // Write contract
     const { data: hash, isPending, writeContract } = useWriteContract();
+
+    console.log("hash", hash, "isPending", isPending, "writeContract", writeContract);
 
     // Wait for transaction receipt
     const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -80,8 +72,21 @@ export default function TokenMintPage() {
             hash,
         });
 
+    // Add this near the top of your component to handle disabled states better
+    console.log("isConnected", isConnected, "isAuthenticated", isAuthenticated, "isPending", isPending, "isConfirming", isConfirming, "remainingAllowance", remainingAllowance);
+    const isDisabled = !isConnected || isPending || isConfirming || Number(remainingAllowance || 0) <= 0;
+
+    console.log("isDisabled", isDisabled);
+
     // Handle mint function
     const handleMint = async () => {
+
+        setTokenPrice(Number(mintPrice));
+        if (!mintPrice) {
+            setTokenPrice(0);
+        }
+
+        console.log("handleMint");
         try {
             setError(null);
 
@@ -90,19 +95,24 @@ export default function TokenMintPage() {
                 return;
             }
 
-            if (!isAuthenticated) {
-                setError("Please sign in with your wallet first");
-                return;
-            }
+            // if (!isAuthenticated) {
+            //     setError("Please sign in with your wallet first");
+            //     return;
+            // }
 
-            const value = mintPrice ? (Number(mintPrice) * amount).toString() : "0";
+            // if (!mintPrice) {
+            //     setTokenPrice(0);
+            // }
+
+            // Calculate the total value in wei
+            const totalValue = BigInt(Number(mintPrice)) * BigInt(amount);
 
             writeContract({
                 address: contractAddresses.tokenMint as `0x${string}`,
                 abi: contractABIs.tokenMint,
                 functionName: "mint",
                 args: [BigInt(amount)],
-                value: BigInt(value),
+                value: totalValue,
             });
         } catch (err) {
             console.error("Error minting tokens:", err);
@@ -118,60 +128,21 @@ export default function TokenMintPage() {
         }
     }, [isConfirmed]);
 
-    // Format balance for display
-    const formattedBalance = tokenBalance && typeof tokenBalance === 'bigint'
-        ? Number(formatEther(tokenBalance))
-        : 0;
+
+    // Add this right before the return statement
+    useEffect(() => {
+        console.log("Mint state:", {
+            address,
+            isConnected,
+            isAuthenticated,
+            remainingAllowance: Number(remainingAllowance || 0),
+            mintPrice,
+            amount
+        });
+    }, [address, isConnected, isAuthenticated, remainingAllowance, mintPrice, amount]);
 
     return (
-        <div className="container max-w-4xl py-12">
-            <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Token Minting Portal
-            </h1>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-white">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-lg flex items-center">
-                            <CoinsIcon className="mr-2 h-5 w-5" />
-                            Token Balance
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">{formattedBalance.toLocaleString()}</p>
-                        <p className="text-sm text-slate-400">{tokenSymbol as string ?? "Tokens"}</p>
-                    </CardContent>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-white">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-lg flex items-center">
-                            <RefreshCwIcon className="mr-2 h-5 w-5" />
-                            Daily Allowance
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">{Number(remainingAllowance ?? 0).toString()}</p>
-                        <p className="text-sm text-slate-400">Tokens available today</p>
-                    </CardContent>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-white">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-lg flex items-center">
-                            <InfoIcon className="mr-2 h-5 w-5" />
-                            Mint Price
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">
-                            {mintPrice ? formatEther(mintPrice as bigint) : "0"} ETH
-                        </p>
-                        <p className="text-sm text-slate-400">Per token</p>
-                    </CardContent>
-                </Card>
-            </div>
-
+        <div className="container max-w-4xl py-8">
             <Card className="border-slate-200 shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-2xl">Mint {tokenName as string || "Tokens"}</CardTitle>
@@ -193,12 +164,12 @@ export default function TokenMintPage() {
                             <div className="pt-4 pb-2">
                                 <Slider
                                     id="amount"
-                                    defaultValue={[1]}
+                                    value={[amount]}
                                     max={Number(remainingAllowance || 10)}
                                     min={1}
                                     step={1}
                                     onValueChange={(value) => setAmount(value[0])}
-                                    disabled={!isConnected || !isAuthenticated}
+                                    disabled={!isConnected || Number(remainingAllowance || 0) <= 0}
                                 />
                             </div>
 
@@ -255,33 +226,23 @@ export default function TokenMintPage() {
                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                         size="lg"
                         onClick={handleMint}
-                        disabled={!isConnected || !isAuthenticated || isPending || isConfirming}
+                        disabled={isDisabled}
                     >
                         {isPending || isConfirming ? (
                             <>
                                 <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" />
                                 {isPending ? "Confirm in Wallet" : "Processing..."}
                             </>
+                        ) : Number(remainingAllowance || 0) <= 0 ? (
+                            <>Daily Limit Reached</>
                         ) : (
                             <>Mint Tokens</>
                         )}
                     </Button>
                 </CardFooter>
             </Card>
-
-            <div className="mt-8 text-center text-sm text-muted-foreground">
-                <p>
-                    Contract Address:{" "}
-                    <a
-                        href={blockExplorer.tokenMint}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline hover:text-blue-600"
-                    >
-                        {contractAddresses.tokenMint}
-                    </a>
-                </p>
-            </div>
         </div>
     );
-} 
+}
+
+export default TokenMint;
