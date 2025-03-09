@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'; // Assuming you have a Prisma client setu
 
 export async function GET(request: NextRequest) {
     const user = getAuthUser();
+    console.log('auth user:', user);
 
     if (!user) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

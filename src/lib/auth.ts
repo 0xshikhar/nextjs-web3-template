@@ -60,3 +60,22 @@ export async function verifyJwtToken(token: string): Promise<JwtPayload> {
         });
     });
 }
+
+// Debug function to check token validity
+export function debugJwtToken(token: string): { valid: boolean; payload?: JwtPayload; error?: string } {
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+        return { valid: false, error: 'JWT_SECRET is not defined' };
+    }
+
+    try {
+        const decoded = jwt.verify(token, secret);
+        return { valid: true, payload: decoded as JwtPayload };
+    } catch (error) {
+        return {
+            valid: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+}

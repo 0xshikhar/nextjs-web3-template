@@ -55,11 +55,11 @@ export function AuthButton() {
 
             {error && <p className="text-red-500 w-full mt-2">{error}</p>}
 
-            {isAuthenticated && user && (
+            {/* {isAuthenticated && user && (
                 <div className="mt-2 text-sm text-gray-500">
                     Signed in as {user.username || user.walletAddress}
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

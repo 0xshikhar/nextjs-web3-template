@@ -13,7 +13,7 @@ export default function InstructionsComponent() {
 						Create <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">Nextjs14 Template</span>
 					</CardTitle>
 					<p className="text-xl text-slate-300 mt-4">
-						Using RainbowKit, Wagmi, and TailwindCSS
+						Using RainbowKit, Wagmi, Prisma, Shadcn/UI, and TailwindCSS
 					</p>
 				</CardHeader>
 
