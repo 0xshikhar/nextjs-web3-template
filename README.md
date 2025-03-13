@@ -1,6 +1,6 @@
 # Next.js Web3 Template
 
-A modern, feature-rich Next.js 14+ starter template for building web3 applications with app router, wagmi, RainbowKit, Prisma, shadcn/ui, and more.
+A modern, feature-rich Next.js 14+ starter template for building web3 applications with app router, wagmi, RainbowKit, shadcn/ui, and more.
 
 ![Next.js Web3 Template](https://github.com/0xShikhar/next14-web3-template/raw/main/public/og.jpg)
 
@@ -10,7 +10,6 @@ A modern, feature-rich Next.js 14+ starter template for building web3 applicatio
 - 🌈 **RainbowKit v2** for beautiful wallet connection UI
 - 🧰 **wagmi v2** for React hooks for Ethereum
 - 🔐 **SIWE (Sign-In with Ethereum)** authentication
-- 🗃️ **Prisma ORM** with PostgreSQL integration
 - 🎨 **shadcn/ui** components with Tailwind CSS
 - 🌙 **Dark mode** support with next-themes
 - 🔍 **Type-safe environment variables** with t3-env
@@ -48,7 +47,6 @@ Check out the live demo: [Next14 Web3 Template](https://github.com/0xShikhar/nex
 
 ### Backend Integration
 
-- **Prisma ORM**: Type-safe database client for PostgreSQL.
 - **API Routes**: Next.js API routes for backend functionality.
 - **Middleware**: Authentication middleware for protected routes.
 
@@ -81,12 +79,7 @@ This template uses Tailwind CSS for styling. You can customize the theme in `tai
    JWT_SECRET=your_jwt_secret
    ```
 
-4. Generate Prisma client:
-   ```bash
-   npx prisma generate
-   ```
-
-5. Run the development server:
+4. Run the development server:
    ```bash
    pnpm dev
    # or
@@ -148,7 +141,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Next.js](https://nextjs.org/)
 - [RainbowKit](https://www.rainbowkit.com/)
 - [wagmi](https://wagmi.sh/)
-- [Prisma](https://www.prisma.io/)
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [TypeScript](https://www.typescriptlang.org/)
