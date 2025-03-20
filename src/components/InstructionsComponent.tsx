@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AuthButton } from "./AuthButton";
 
 export default function InstructionsComponent() {
 	return (
@@ -13,7 +12,7 @@ export default function InstructionsComponent() {
 						Create <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">Nextjs14 Template</span>
 					</CardTitle>
 					<p className="text-xl text-slate-300 mt-4">
-						Using RainbowKit, Wagmi, Prisma, Shadcn/UI, and TailwindCSS
+						Using Prisma, Shadcn/UI, and TailwindCSS
 					</p>
 				</CardHeader>
 
@@ -34,8 +33,6 @@ export default function InstructionsComponent() {
 							>
 								Give a Star on Github
 							</Button>
-
-							<AuthButton />
 						</div>
 					</div>
 

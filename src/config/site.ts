@@ -6,8 +6,8 @@ export const siteConfig: SiteConfig = {
   name: "Next14 Web3 Template",
   author: "0xShikhar",
   description:
-    "Next.js 14+ starter template with app router, wagmi, rainbowkit, prisma, shadcn/ui, typesafe env, icons and configs setup.",
-  keywords: ["Next.js", "React", "Tailwind CSS", "Radix UI", "shadcn/ui", "wagmi", "rainbowkit", "prisma"],
+    "Next.js 14+ starter template with app router, prisma, shadcn/ui, typesafe env, icons and configs setup.",
+  keywords: ["Next.js", "React", "Tailwind CSS", "Radix UI", "shadcn/ui", "prisma"],
   url: {
     base: env.NEXT_PUBLIC_APP_URL,
     author: "https://0xshikhar.xyz",

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyJwtToken } from '@/lib/auth';
 
 // Add paths that should be protected
 const protectedPaths = [
@@ -29,39 +28,9 @@ export default async function middleware(request: NextRequest) {
 
     // Check if the path should be protected
     if (protectedPaths.some(path => pathname.startsWith(path))) {
-        const token = request.headers.get('authorization')?.replace('Bearer ', '');
-
-        if (!token) {
-            console.log(`No token provided for protected path: ${pathname}`);
-            return NextResponse.json(
-                { error: 'No token provided' },
-                { status: 401 }
-            );
-        }
-
-        try {
-            // Verify the token
-            const decoded = await verifyJwtToken(token);
-            console.log(`Token verified for user: ${decoded.userId}`);
-
-            // Add user info to request headers to be accessible in route handlers
-            const requestHeaders = new Headers(request.headers);
-            requestHeaders.set('x-user-id', decoded.userId);
-            requestHeaders.set('x-user-address', decoded.address);
-
-            // Return the request with modified headers
-            return NextResponse.next({
-                request: {
-                    headers: requestHeaders,
-                },
-            });
-        } catch (error) {
-            console.error(`Token verification failed for path ${pathname}:`, error);
-            return NextResponse.json(
-                { error: 'Invalid token' },
-                { status: 401 }
-            );
-        }
+        console.log(`Access granted to protected path: ${pathname}`);
+        // Return the request without checking for a token
+        return NextResponse.next();
     }
 
     return NextResponse.next();

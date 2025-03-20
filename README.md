@@ -1,15 +1,12 @@
 # Next.js14 Web3 Template with Prisma
 
-A modern, feature-rich Next.js 14+ starter template for building web3 applications with app router, wagmi, RainbowKit, Prisma, shadcn/ui, and more.
+A modern, feature-rich Next.js 14+ starter template for building web2 applications with app router, Prisma, shadcn/ui, and more.
 
 ![Next.js Web3 Template](https://github.com/0xShikhar/next14-web3-template/raw/main/public/og.jpg)
 
 ## Features
 
 - ⚡️ **Next.js 14+** with App Router
-- 🌈 **RainbowKit v2** for beautiful wallet connection UI
-- 🧰 **wagmi v2** for React hooks for Ethereum
-- 🔐 **SIWE (Sign-In with Ethereum)** authentication
 - 🗃️ **Prisma ORM** with PostgreSQL integration
 - 🎨 **shadcn/ui** components with Tailwind CSS
 - 🌙 **Dark mode** support with next-themes
@@ -29,7 +26,6 @@ Check out the live demo: [Next14 Web3 Template](https://github.com/0xShikhar/nex
 - Node.js 18+ (LTS recommended)
 - pnpm, npm, or yarn (pnpm recommended)
 - PostgreSQL database (for Prisma)
-
 
 ## Key Components
 
@@ -61,11 +57,13 @@ This template uses Tailwind CSS for styling. You can customize the theme in `tai
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/0xShikhar/next14-web3-template.git
    ```
 
 2. Install dependencies:
+
    ```bash
    cd next14-web3-template
    pnpm install
@@ -77,11 +75,13 @@ This template uses Tailwind CSS for styling. You can customize the theme in `tai
 
 3. Set up environment variables:
    Create a `.env.local` file in the root directory with the following variables:
+
    ```
    JWT_SECRET=your_jwt_secret
    ```
 
 4. Generate Prisma client:
+
    ```bash
    npx prisma generate
    ```
@@ -94,7 +94,6 @@ This template uses Tailwind CSS for styling. You can customize the theme in `tai
    # or
    yarn dev
    ```
-
 
 ## Deployment
 
@@ -112,6 +111,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 You can also deploy to other platforms that support Next.js:
 
 1. Build the application:
+
    ```bash
    pnpm build
    # or
@@ -146,8 +146,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - [Next.js](https://nextjs.org/)
-- [RainbowKit](https://www.rainbowkit.com/)
-- [wagmi](https://wagmi.sh/)
 - [Prisma](https://www.prisma.io/)
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
@@ -160,4 +158,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 Built with ❤️ by [0xShikhar](https://0xshikhar.xyz)
+
+```
+
 ```
