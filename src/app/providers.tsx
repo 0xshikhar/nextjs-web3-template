@@ -1,80 +1,65 @@
 'use client';
 
 import * as React from 'react';
-import '@rainbow-me/rainbowkit/styles.css';
-
-import {
-    getDefaultConfig,
-    RainbowKitProvider,
-    connectorsForWallets,
-    getDefaultWallets,
-} from '@rainbow-me/rainbowkit';
-import {
-    argentWallet,
-    trustWallet,
-    ledgerWallet,
-} from '@rainbow-me/rainbowkit/wallets';
+import { PrivyProvider } from '@privy-io/react-auth';
 import { WagmiProvider } from 'wagmi';
 import {
     QueryClientProvider,
     QueryClient,
 } from "@tanstack/react-query";
-import 'dotenv/config'
+import 'dotenv/config';
 
 import {
     mainnet,
     sepolia
 } from 'wagmi/chains';
 import { agentChain } from '@/lib/customChain';
+import { createConfig } from 'wagmi';
+import { http } from 'viem';
 
-// const projectId = process.env.WALLET_CONNECT_PROJECT_ID || '';
-const projectId = '9811958bd307518b364ff7178034c435';
-
-
-const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
-    projectId: projectId,
+// Configure wagmi client
+const config = createConfig({
     chains: [mainnet, sepolia, agentChain],
-    ssr: true, // If your dApp uses server side rendering (SSR)
+    transports: {
+        [mainnet.id]: http(),
+        [sepolia.id]: http(),
+        [agentChain.id]: http(),
+    },
 });
-
-// const connectors = connectorsForWallets([
-//     ...wallets,
-//     {
-//         groupName: 'Other',
-//         wallets: [
-//             argentWallet({ projectId, chains }),
-//             trustWallet({ projectId, chains }),
-//             ledgerWallet({ projectId, chains }),
-//         ],
-//     },
-// ]);
-const { wallets } = getDefaultWallets({
-    appName: 'RainbowKit demo',
-    projectId,
-});
-
-const demoAppInfo = {
-    appName: 'My Wallet Demo',
-};
 
 const queryClient = new QueryClient();
+
+// Your Privy App ID - replace with your actual app ID
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || 'your-privy-app-id';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = React.useState(false);
     React.useEffect(() => setMounted(true), []);
+    
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                {mounted ? (
-                    <RainbowKitProvider appInfo={demoAppInfo}>
-                        {children}
-                    </RainbowKitProvider>
-                ) : (
-                    <div style={{ visibility: "hidden" }}>
-                        {children}
-                    </div>
-                )}
+                <PrivyProvider
+                    appId={PRIVY_APP_ID}
+                    config={{
+                        loginMethods: ['wallet', 'email', 'google'],
+                        appearance: {
+                            theme: 'light',
+                            accentColor: '#3B82F6',
+                        },
+                        embeddedWallets: {
+                            createOnLogin: 'users-without-wallets',
+                        },
+                    }}
+                >
+                    {mounted ? (
+                        children
+                    ) : (
+                        <div style={{ visibility: "hidden" }}>
+                            {children}
+                        </div>
+                    )}
+                </PrivyProvider>
             </QueryClientProvider>
         </WagmiProvider>
     );

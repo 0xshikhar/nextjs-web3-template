@@ -1,15 +1,14 @@
 # Next.js14 Web3 Template with Prisma
 
-A modern, feature-rich Next.js 14+ starter template for building web3 applications with app router, wagmi, RainbowKit, Prisma, shadcn/ui, and more.
+A modern, feature-rich Next.js 14+ starter template for building web3 applications with app router, wagmi, Privy, Prisma, shadcn/ui, and more.
 
 ![Next.js Web3 Template](https://github.com/0xShikhar/next14-web3-template/raw/main/public/og.jpg)
 
 ## Features
 
 - ⚡️ **Next.js 14+** with App Router
-- 🌈 **RainbowKit v2** for beautiful wallet connection UI
+- 🔐 **Privy** for seamless wallet connection and authentication
 - 🧰 **wagmi v2** for React hooks for Ethereum
-- 🔐 **SIWE (Sign-In with Ethereum)** authentication
 - 🗃️ **Prisma ORM** with PostgreSQL integration
 - 🎨 **shadcn/ui** components with Tailwind CSS
 - 🌙 **Dark mode** support with next-themes
@@ -29,15 +28,14 @@ Check out the live demo: [Next14 Web3 Template](https://github.com/0xShikhar/nex
 - Node.js 18+ (LTS recommended)
 - pnpm, npm, or yarn (pnpm recommended)
 - PostgreSQL database (for Prisma)
-
+- Privy App ID (sign up at privy.io)
 
 ## Key Components
 
 ### Web3 Integration
 
-- **RainbowKit**: Provides a beautiful, customizable wallet connection UI.
+- **Privy**: Simple, customizable wallet connection and authentication.
 - **wagmi**: React hooks for Ethereum, making it easy to interact with smart contracts.
-- **SIWE**: Sign-In with Ethereum for secure authentication.
 - **Custom Chain Support**: Easily add custom blockchain networks.
 
 ### UI Components
@@ -160,4 +158,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 Built with ❤️ by [0xShikhar](https://0xshikhar.xyz)
-```
