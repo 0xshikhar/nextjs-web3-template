@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/edge.js'
+import { PrismaClient } from '../../generated/prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 // PrismaClient is attached to the `global` object in development to prevent
@@ -9,6 +9,7 @@ export const prisma =
     globalForPrisma.prisma ||
     new PrismaClient({
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        accelerateUrl: process.env.DATABASE_URL!,
     }).$extends(withAccelerate())
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma 
